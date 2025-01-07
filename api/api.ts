@@ -1,32 +1,28 @@
-import { Unit } from '@/types/measure';
-import { IWeatherReport } from '@/types/weatherReport';
+import { FetchOpenWeatherApiConfig } from "@/types/api";
 
-const OPEN_WEATHER_URL = process.env.EXPO_PUBLIC_OPEN_WEATHER_URL;
-const OPEN_WEATHER_URL_ICONS = process.env.EXPO_PUBLIC_OPEN_WEATHER_URL_ICONS;
-const OPEN_WEATHER_API_KEY = process.env.EXPO_PUBLIC_OPEN_WEATHER_API_KEY;
+const BACKEND_API_URL = process.env.EXPO_PUBLIC_BACKEND_API;
+const OPEN_WEATHER_API_URL = process.env.EXPO_PUBLIC_OPEN_WEATHER_API;
 
-// Get weather in city
-export const getWeather = async (
-  city: string,
-  units: Unit = Unit.METRIC,
-): Promise<IWeatherReport | { message: string }> => {
-  const res = await fetch(
-    `${OPEN_WEATHER_URL}/data/2.5/weather?q=${city}&units=${units}&appid=${OPEN_WEATHER_API_KEY}`,
-  );
+if (!BACKEND_API_URL || !OPEN_WEATHER_API_URL) {
+    throw new Error("Missing environment variables");
+}
 
-  if (!res.ok) {
-    throw await res.json();
-  }
+const fetchApi = async (baseUrl: string, query: string) => {
+    const res = await fetch(
+      `${baseUrl}/${query}`,
+    );
+  
+    if (!res.ok) {
+      throw await res.json();
+    }
+  
+    return await res.json();
+}
 
-  const data = await res.json();
+export const fetchBackendApi = async (query: string) => {
+    return fetchApi(BACKEND_API_URL, query);
+}
 
-  return {
-    ...data,
-    measurement: units,
-  };
-};
-
-// Get weather icon
-export const getWeatherIconUrl = (icon: string) => {
-  return `${OPEN_WEATHER_URL_ICONS}/img/wn/${icon}@2x.png`;
-};
+export const fetchOpenWeatherApi = (query: string, config?: FetchOpenWeatherApiConfig) => {
+    return config?.isImage ? `${OPEN_WEATHER_API_URL}/${query}` : fetchApi(OPEN_WEATHER_API_URL, query);
+}

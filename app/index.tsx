@@ -8,7 +8,6 @@ import {
     View,
 } from 'react-native';
 
-import { getWeather } from '@/api/api';
 import UnitButton from '@/components/UnitButton';
 import { useWeatherStore } from '@/store/weatherReportStore';
 import { Unit } from '@/types/measure';
@@ -16,6 +15,7 @@ import { IWeatherReport } from '@/types/weatherReport';
 import { toCapitalSentence } from '@/utils/transform';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { getWeather } from '@/api/routes/weatherReport';
 
 export default function HomeScreen() {
   const router = useRouter();

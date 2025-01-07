@@ -1,4 +1,4 @@
-import { getWeatherIconUrl } from '@/api/api';
+import { getWeatherIconUrl } from '@/api/routes/weatherReport';
 import { useWeatherStore } from '@/store/weatherReportStore';
 import { Unit } from '@/types/measure';
 import { toCapitalSentence } from '@/utils/transform';
